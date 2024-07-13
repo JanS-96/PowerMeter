@@ -6,6 +6,12 @@
   copy /Y ..\output\power.ino.zip dist
 */
 
+/*
+ToDo:
+-anpassen des IMU an XIAO Board
+-Zero-Offset und multiplier calibration ohne SD-Karte?
+*/
+
 #include "Arduino_LSM6DS3.h"
 #include "Adafruit_Sensor.h"
 #include "board.h"
