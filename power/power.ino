@@ -9,7 +9,6 @@
 /*
 ToDo:
 -anpassen des IMU an XIAO Board
--Zero-Offset und multiplier calibration ohne SD-Karte?
 */
 
 #include "Arduino_LSM6DS3.h"
@@ -112,9 +111,6 @@ HX711_ADC LoadCell(HX711_dout, HX711_sck);
 //HX711 EEPROM calibration settings saving/loading
 const int calVal_eepromAdress = 0;
 unsigned long t = 0;
-
-//MPU6050 constructor:
-Adafruit_MPU6050 mpu;
 
 //Internal filesystem
 using namespace Adafruit_LittleFS_Namespace;
