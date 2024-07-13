@@ -13,6 +13,8 @@
 #include <bluefruit.h>
 #include <SPI.h>
 #include "HX711_ADC.h"
+#include <pinDefinitions.h>
+#include <nrf52840.h>
 
 
 #include <Adafruit_LittleFS.h>
