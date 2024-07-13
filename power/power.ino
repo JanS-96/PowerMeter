@@ -52,7 +52,7 @@
 // Pin-outs
 #define LED_PIN LED_BUILTIN
 #define SD_CS_PIN PIN_A3
-#define GYRO_INT_PIN A4
+#define GYRO_INT_PIN P0_11
 
 // Interrupt related variables (must be volatile)
 volatile long timeFirstSleepCheck=0;
@@ -71,7 +71,7 @@ uint16_t test_totalCrankRev=0; // for testing
 uint16_t test_totalCrankRev_inc=0; // for testing
 
 #define LOAD_OFFSET_DEFAULT 8745984
-#define LOAD_MULTIPLIER_DEFAULT 810.1
+#define LOAD_MULTIPLIER_DEFAULT 1702.34
 #define CALIBRATIONS_FILENAME    "/calibrations.txt"
 
 typedef struct settings_struct {
