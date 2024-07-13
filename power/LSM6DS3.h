@@ -71,7 +71,7 @@ class LSM6DS3Class {
     virtual int gyroscopeAvailable(); // Check for available data from gyroscope
 
     //Temperature
-    virtual float readTempCelsius(float& temp);
+    virtual int readTempCelsius(float& temp);
 
   protected:
     int readRegister(uint8_t address);

@@ -168,7 +168,7 @@ int LSM6DS3Class::gyroscopeAvailable()
   return 0;
 }
 
-float LSM6DS3Class::readTempCelsius(float& temp){
+int LSM6DS3Class::readTempCelsius(float& temp){
   int16_t data;
   if (!readRegisters(LSM6DS3_ACC_GYRO_OUT_TEMP_L, (uint8_t*)data, sizeof(data))) {
     temp = NAN;
@@ -176,10 +176,10 @@ float LSM6DS3Class::readTempCelsius(float& temp){
     return 0;
   }  
 
-  float output = (float)data / 16; //divide by tempSensitivity to scale
-  output += 25; //Add 25 degrees to remove offset
+  temp = (float)data / 16; //divide by tempSensitivity to scale
+  temp += 25; //Add 25 degrees to remove offset
     
-  return output;
+  return 1;
 }
 
 float LSM6DS3Class::gyroscopeSampleRate()

@@ -239,9 +239,15 @@ void getZtilt(float *roll, float *z) {
 }
 
 float getTemperature() {
+  float temp;
+
+  IMU.readTempCelsius(temp);
+
+  return temp
   /* Get new sensor events with the readings */
-  sensors_event_t a, g, temp;
+  /*sensors_event_t a, g, temp;
 
   mpu.getEvent(&a, &g, &temp);
   return(temp.temperature);
+  */
 }
