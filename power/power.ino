@@ -6,7 +6,7 @@
   copy /Y ..\output\power.ino.zip dist
 */
 
-#include "Adafruit_MPU6050.h"
+#include "Arduino_LSM6DS3.h"
 #include "Adafruit_Sensor.h"
 #include "board.h"
 #include <Wire.h>
@@ -27,7 +27,7 @@
 
 // Virtufit Etappe I: crank length, in meters
 // (to be added to the calibration procedure!)
-#define CRANK_RADIUS 0.1725
+#define CRANK_RADIUS 0.175
 
 // Milliseconds to wait before go to sleep: 900000 = 15 minutes 
 #define MILLIS_TO_SLEEP 900000 
@@ -144,6 +144,7 @@ void setup() {
   Wire.begin();
 
   Serial.begin(115200);
+  
   int cnt=0;
   while ( !Serial && (cnt++ < 300)) delay(10);   // for nrf52840 with native usb
 
@@ -151,7 +152,8 @@ void setup() {
   lastSessionStart = millis();
 
   pinMode(LED_BUILTIN, OUTPUT);
-  digitalWrite(LED_BUILTIN, HIGH);
+  pinMode(P0_14, OUTPUT);
+  digitalWrite(P0_14, LOW);
 
   // Setup, calibrate our other components
   gyroSetup();
