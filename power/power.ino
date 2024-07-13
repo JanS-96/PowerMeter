@@ -35,7 +35,7 @@
 #define MILLIS_TO_SLEEP 900000 
 
 // HX711 on-board hardware switch default is 10 Hz (alternative: 80 Hz)
-#define HX711_RATE 10 
+#define HX711_RATE 80 
 
 // Interval for publishing the cadence and power to bluetooth when not pedaling
 #define STOPPED_BLE_UPDATE_INTERVAL 2000
@@ -97,8 +97,8 @@ lastSessionData_struct lastSessionData[LASTSESSIONDATAINDEX_MAX];
 long lastSessionDataIndex=0;
 
 //HX711 pins:
-#define HX711_dout A0 //mcu > HX711 dout pin (was: 4)
-#define HX711_sck A1 //mcu > HX711 sck pin (was: 5)
+#define HX711_dout D1 //mcu > HX711 dout pin (was: 4)
+#define HX711_sck D0 //mcu > HX711 sck pin (was: 5)
 
 //HX711 constructor:
 HX711_ADC LoadCell(HX711_dout, HX711_sck);
