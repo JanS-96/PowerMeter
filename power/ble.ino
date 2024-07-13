@@ -11,7 +11,7 @@
 
 // For battery-level calculations
 #define VBAT_MV_PER_LSB (0.7324F) // 3.0V ADC range and 12-bit ADC resolution = 3000mV/4096
-#define VBAT_DIVIDER (0.7128F) // 0.806M and 2M voltage divider factor
+#define VBAT_DIVIDER (0.3378F) // 0.806M and 2M voltage divider factor
 
 // Service and character constants at:
 // https://github.com/adafruit/Adafruit_nRF52_Arduino/blob/bd0747473242d5d7c58ebc67ab0aa5098db56547/libraries/Bluefruit52Lib/src/BLEUuid.h
@@ -62,7 +62,7 @@ void bleSetup() {
 
   // Start the BLE Battery Service
   blebas.begin();
-  pinMode(BOARD_VBATPIN, INPUT);
+  pinMode(PIN_VBAT, INPUT);
 
   // Configure and Start BLE DFU OTA service
   bledfu.begin();
@@ -149,8 +149,8 @@ void setupPwr(void) {
   pwrLocChar.setPermission(SECMODE_OPEN, SECMODE_NO_ACCESS);
   pwrLocChar.setFixedLen(1);
   pwrLocChar.begin();
-  // Set location to "left crank"
-  pwrLocChar.write8(5);
+  // Set location to "right crank"
+  pwrLocChar.write8(6);
 
 
   //

@@ -8,7 +8,7 @@
 
 /*
 ToDo:
--anpassen des IMU an XIAO Board
+ble prüfen
 */
 
 #include "Arduino_LSM6DS3.h"
