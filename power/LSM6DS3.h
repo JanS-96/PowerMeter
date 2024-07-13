@@ -57,7 +57,9 @@ class LSM6DS3Class {
 
     int begin();
     void end();
-
+    void setSigMotionInt();
+    void resetSigMotionInt();
+    
     // Accelerometer
     virtual int readAcceleration(float& x, float& y, float& z); // Results are in g (earth gravity).
     virtual float accelerationSampleRate(); // Sampling rate of the sensor.
@@ -68,6 +70,8 @@ class LSM6DS3Class {
     virtual float gyroscopeSampleRate(); // Sampling rate of the sensor.
     virtual int gyroscopeAvailable(); // Check for available data from gyroscope
 
+    //Temperature
+    virtual float readTempCelsius(float& temp);
 
   protected:
     int readRegister(uint8_t address);

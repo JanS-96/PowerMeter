@@ -77,6 +77,7 @@ int LSM6DS3Class::begin()
   // Set the ODR config register to ODR/4
   writeRegister(LSM6DS3_CTRL8_XL, 0x09);
 
+  
   return 1;
 }
 
@@ -91,6 +92,19 @@ void LSM6DS3Class::end()
     writeRegister(LSM6DS3_CTRL1_XL, 0x00);
     _wire->end();
   }
+}
+
+void LSM6DS3Class::setSigMotionInt()
+{
+  // Set Interrupt to Significant Motion Detect
+  writeRegister(LSM6DS3_INT1_CTRL, 0x40);
+    
+}
+void LSM6DS3Class::resetSigMotionInt()
+{
+  // Set Interrupt to Significant Motion Detect
+  writeRegister(LSM6DS3_INT1_CTRL, 0x00);
+    
 }
 
 int LSM6DS3Class::readAcceleration(float& x, float& y, float& z)
@@ -152,6 +166,20 @@ int LSM6DS3Class::gyroscopeAvailable()
   }
 
   return 0;
+}
+
+float LSM6DS3Class::readTempCelsius(float& temp){
+  int16_t data;
+  if (!readRegisters(LSM6DS3_ACC_GYRO_OUT_TEMP_L, (uint8_t*)data, sizeof(data))) {
+    temp = NAN;
+
+    return 0;
+  }  
+
+  float output = (float)data / 16; //divide by tempSensitivity to scale
+  output += 25; //Add 25 degrees to remove offset
+    
+  return output;
 }
 
 float LSM6DS3Class::gyroscopeSampleRate()

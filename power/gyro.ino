@@ -1,8 +1,8 @@
 /**
- * MPU6050/gyroscope specific code. Initialize, helpers to do angular math.
+ * LSM6DS3/gyroscope specific code. Initialize, helpers to do angular math.
  *
  * TODO big improvements I think to use the sleep mode and interrupts provided
- * by this MPU.
+ * by this IMU.
  */
 #include <wiring.h>
 #include "board.h"
@@ -20,15 +20,16 @@ void gyroSetup() {
   timeFirstSleepCheck=0;
 
   // Try to initialize! (address = 0x68)
-  if (!mpu.begin()) {
-    Serial.println("Failed to find MPU6050 chip");
+  if (!IMU.begin()) {
+    Serial.println("Failed to find LSM6DS3 chip");
     while (1) {
       delay(10);
     }
   }
-  Serial.println("MPU6050 Found");
+  Serial.println("LSM6DS3 Found");
 
-  // disable 'wakeup' interupt
+  IMU.resetSigMotionInt();
+/* nur MPU6050 spezifisch: // disable 'wakeup' interupt 
   mpu.setMotionInterrupt(false);
 
   mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
@@ -92,7 +93,7 @@ void gyroSetup() {
 
   mpu.setHighPassFilter(MPU6050_HIGHPASS_UNUSED);
   mpu.setClock(MPU6050_INTR_8MHz); // Keep clock running on internal clock 
-
+*/
 
   Serial.println("");
   delay(100);
@@ -125,7 +126,7 @@ void enterSleepMode() {
   // Power down loadcell
   LoadCell.powerDown();
 
-  // Put MPU6050 in low power (wild guess, to be measured)
+  /*// Put MPU6050 in low power (wild guess, to be measured)
   mpu.setGyroRange(MPU6050_RANGE_250_DEG);
   mpu.setHighPassFilter(MPU6050_HIGHPASS_UNUSED);
   mpu.setFilterBandwidth(MPU6050_BAND_260_HZ); ///< Docs imply this disables the filter
@@ -159,7 +160,7 @@ void enterSleepMode() {
   mpu.disableTemp(true);
   mpu.enableStandby(STBY_XA + STBY_YA + STBY_XG + STBY_YG); // STBY_XA, STBY_YA, STBY_ZA, STBY_XG, STBY_YG, STBY_ZG
 */
-
+/*
   // Set zero motion detection interrupt at gyro MPU6050
   mpu.setHighPassFilter(MPU6050_HIGHPASS_0_63_HZ);
   mpu.setMotionDetectionThreshold(1);
@@ -167,19 +168,34 @@ void enterSleepMode() {
   mpu.setInterruptPinLatch(false);  
   mpu.setInterruptPinPolarity(false); // active high
   mpu.setMotionInterrupt(true);
+*/
 
+  IMU.setSigMotionInterrupt();
+  
   // Enable wake-up by motion interrupt and power-down the Arduino board
   pinMode(GYRO_INT_PIN, INPUT_PULLUP);
-  nrf_gpio_cfg_input(2,NRF_GPIO_PIN_NOPULL); 
-  nrf_gpio_cfg_sense_input(2, NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_SENSE_HIGH);
+  nrf_gpio_cfg_input(GYRO_INT_PIN,NRF_GPIO_PIN_NOPULL); //Pin 11 statt gyro_int_pin falls es nicht funktioniert.
+  nrf_gpio_cfg_sense_input(GYRO_INT_PIN, NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_SENSE_HIGH);
   sd_power_system_off();
 }
 
 float getZrot() {
   static float zrot_prev=0;
 
+  float g_x, g_y, g_z;
+
+  if (IMU.gyroscopeAvailable()) {
+    IMU.readGyroscope(g_x, g_y, g_z);
+  }
+
+  if (g_z != zrot_prev) {
+    zrot_prev = g_z;
+    newZrotDataReady++;
+  }
+
+  return abs(g_z);
   /* Get new sensor events with the readings */
-  sensors_event_t a, g, temp;
+  /*sensors_event_t a, g, temp;
 
   mpu.getEvent(&a, &g, &temp);
 
@@ -190,11 +206,25 @@ float getZrot() {
 
 //  printfLog("%d %d %d\n", a.acceleration.x, a.acceleration.y, a.acceleration.z);
 
-  return abs(g.gyro.z); // should this be abs????
+  return abs(g.gyro.z); // should this be abs????*/
 }
 
 void getZtilt(float *roll, float *z) {
+
+  float a_x, a_y, a_z;
+
+  if (IMU.accelerationAvailable()) {
+    IMU.readAcceleration(a_x, a_y, a_z);
+  }
+
+  double x_Buff = float(a_x);
+  double y_Buff = float(a_y);
+  double z_Buff = float(a_z);
+  *roll = atan2(y_Buff , z_Buff) * 57.3;
+  *z = atan2((- x_Buff) , sqrt(y_Buff * y_Buff + z_Buff * z_Buff)) * 57.3;
+
   /* Get new sensor events with the readings */
+  /*
   sensors_event_t a, g, temp;
 
   mpu.getEvent(&a, &g, &temp);
@@ -204,6 +234,8 @@ void getZtilt(float *roll, float *z) {
   double z_Buff = float(a.acceleration.z);
   *roll = atan2(y_Buff , z_Buff) * 57.3;
   *z = atan2((- x_Buff) , sqrt(y_Buff * y_Buff + z_Buff * z_Buff)) * 57.3;
+  *
+   */
 }
 
 float getTemperature() {
@@ -213,4 +245,3 @@ float getTemperature() {
   mpu.getEvent(&a, &g, &temp);
   return(temp.temperature);
 }
-
