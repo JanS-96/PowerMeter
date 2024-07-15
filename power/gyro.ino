@@ -193,7 +193,7 @@ float getZrot() {
     newZrotDataReady++;
   }
 
-  return abs(g_z);
+  return abs(g_z * PI / 180.0);
   /* Get new sensor events with the readings */
   /*sensors_event_t a, g, temp;
 

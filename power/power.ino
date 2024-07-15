@@ -8,7 +8,8 @@
 
 /*
 ToDo:
-ble prüfen
+-watt zahlen viel zu hohc
+-cadence falsch(viel zu hoch)
 */
 
 #include "Arduino_LSM6DS3.h"
@@ -49,7 +50,7 @@ ble prüfen
 // to prevent spikes in the avgForce calculation 
 // The HX711 rate is 10 Hz, and the HX711 library smoothens the data over the last 32 samples = 3.2 seconds 
 // and we assume that this 3.2 seconds is the slowest cycle possible (for which we still want all measurements)
-#define CRANK_MINIMUM_ROTATION_TIME 1000
+#define CRANK_MINIMUM_ROTATION_TIME 500
 
 // If the number of radians per seconds is less than this, we assume the user stopped pedaling
 #define STAND_STILL_RPS (0.25 * PI)
@@ -411,7 +412,7 @@ void readUserInput() {
 }
 
 float MA_cadence(float value) {
-  const int nvalues = 256;            // At least the maximum number of values (#ZrotData) per crank-rotation 
+  const int nvalues = 360;            // At least the maximum number of values (#ZrotData) per crank-rotation 
 
   static int current = 0;            // Index for current value
   static int cvalues = 0;            // Count of values read (<= nvalues)
