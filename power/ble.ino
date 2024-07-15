@@ -10,7 +10,7 @@
 #include <BLECharacteristic.h>
 
 // For battery-level calculations
-#define VBAT_MV_PER_LSB (0.7324F) // 3.0V ADC range and 12-bit ADC resolution = 3000mV/4096
+//#define VBAT_MV_PER_LSB (0.7324F) // 3.0V ADC range and 12-bit ADC resolution = 3000mV/4096
 #define VBAT_DIVIDER (0.3378F) // 0.806M and 2M voltage divider factor
 
 // Service and character constants at:

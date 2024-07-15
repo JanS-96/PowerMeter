@@ -47,7 +47,8 @@
 #define LSM6DS3_OUTZ_L_XL          0X2C
 #define LSM6DS3_OUTZ_H_XL          0X2D
 
-
+#define LSM6DS3_INT1_CTRL          0x0D
+#define LSM6DS3_ACC_GYRO_OUT_TEMP_L         0x20
 
 class LSM6DS3Class {
   public:

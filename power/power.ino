@@ -18,7 +18,7 @@ ble prüfen
 #include <bluefruit.h>
 #include <SPI.h>
 #include "HX711_ADC.h"
-#include <pinDefinitions.h>
+#include <variant.h>
 #include <nrf52840.h>
 
 
@@ -29,7 +29,7 @@ ble prüfen
 //#define DEBUG
 
 #define DEV_NAME "Cycle Power Meter"
-#define NRF52840_XXAA
+//#define NRF52840_XXAA
 #define gn 9.80665 // gravity constant
 
 // Virtufit Etappe I: crank length, in meters
@@ -57,7 +57,7 @@ ble prüfen
 // Pin-outs
 #define LED_PIN LED_BUILTIN
 #define SD_CS_PIN PIN_A3
-#define GYRO_INT_PIN P0_11
+#define GYRO_INT_PIN PIN_LSM6DS3TR_C_INT1
 
 // Interrupt related variables (must be volatile)
 volatile long timeFirstSleepCheck=0;
@@ -148,7 +148,8 @@ void setup() {
   Wire.begin();
 
   Serial.begin(115200);
-  
+
+  Serial.println("Setup startet");
   int cnt=0;
   while ( !Serial && (cnt++ < 300)) delay(10);   // for nrf52840 with native usb
 
@@ -156,8 +157,8 @@ void setup() {
   lastSessionStart = millis();
 
   pinMode(LED_BUILTIN, OUTPUT);
-  pinMode(P0_14, OUTPUT);
-  digitalWrite(P0_14, LOW);
+  pinMode(VBAT_ENABLE, OUTPUT);
+  digitalWrite(VBAT_ENABLE, LOW);
 
   // Setup, calibrate our other components
   gyroSetup();

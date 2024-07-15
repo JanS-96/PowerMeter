@@ -117,7 +117,7 @@ void gyroCheckSleepy(bool pedaling) {
 
 void enterSleepMode() {
   Bluefruit.autoConnLed(false);
-  digitalWrite(LED_CONN, LOW);
+  //digitalWrite(LED_CONN, LOW);
   digitalWrite(LED_BUILTIN, LOW);
 
   printfLog("Going to low-power mode..\n");
@@ -170,7 +170,7 @@ void enterSleepMode() {
   mpu.setMotionInterrupt(true);
 */
 
-  IMU.setSigMotionInterrupt();
+  IMU.setSigMotionInt();
   
   // Enable wake-up by motion interrupt and power-down the Arduino board
   pinMode(GYRO_INT_PIN, INPUT_PULLUP);
@@ -243,7 +243,7 @@ float getTemperature() {
 
   IMU.readTempCelsius(temp);
 
-  return temp
+  return temp;
   /* Get new sensor events with the readings */
   /*sensors_event_t a, g, temp;
 
