@@ -8,8 +8,9 @@
 
 /*
 ToDo:
--watt zahlen viel zu hohc
--cadence falsch(viel zu hoch)
+-cadence falsch?
+-testen mit uhr
+-temperatur immer 25°?
 */
 
 #include "Arduino_LSM6DS3.h"
