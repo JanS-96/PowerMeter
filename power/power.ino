@@ -377,6 +377,7 @@ void printHelp() {
   printfLog(" f : Fake power & cadence\n");
   printfLog(" c : Calibrate load sensor\n");
   printfLog(" s : enter Sleep mode\n");
+  printfLog(" d : debug Gyro-Data\n");
   printfLog("\n");
 }
 
@@ -386,6 +387,7 @@ void printHelp() {
 void readUserInput() {
   char buf[64]={'\0'};
   GetUserInput(buf);
+  if (buf[0] == 'd') debugGyro();
   if (buf[0] == 'c') calibrateLoadCell();
   if (buf[0] == 's') enterSleepMode();
   if (buf[0] == 'h') printHelp(); 
@@ -413,7 +415,7 @@ void readUserInput() {
 }
 
 float MA_cadence(float value) {
-  const int nvalues = 360;            // At least the maximum number of values (#ZrotData) per crank-rotation 
+  const int nvalues = 256;            // At least the maximum number of values (#ZrotData) per crank-rotation 
 
   static int current = 0;            // Index for current value
   static int cvalues = 0;            // Count of values read (<= nvalues)

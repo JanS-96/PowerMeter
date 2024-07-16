@@ -241,7 +241,7 @@ void getZtilt(float *roll, float *z) {
 float getTemperature() {
   float temp;
 
-  IMU.readTempCelsius(temp);
+  printfLog("%d",IMU.readTempCelsius(temp));
 
   return temp;
   /* Get new sensor events with the readings */
@@ -250,4 +250,32 @@ float getTemperature() {
   mpu.getEvent(&a, &g, &temp);
   return(temp.temperature);
   */
+}
+
+void debugGyro(){
+  printfLog("Debugging Gyro:\n");
+  printfLog("Turn crank slowly, first Zrot-Data:\n");
+  delay(500);
+  printfLog("Zrot: %.1f \n",getZrot());
+  delay(200);
+  printfLog("Zrot: %.1f \n",getZrot());
+  delay(200);
+  printfLog("Zrot: %.1f \n",getZrot());
+  delay(200);
+  printfLog("Zrot: %.1f \n",getZrot());
+  delay(200);
+  printfLog("Zrot: %.1f \n",getZrot());
+  delay(200);
+  printfLog("Turn crank slowly, next is MA_cadence:\n");
+  printfLog("MA_cadence: %.1f \n",MA_cadence(getZrot()));
+  delay(200);
+  printfLog("MA_cadence: %.1f \n",MA_cadence(getZrot()));
+  delay(200);
+  printfLog("MA_cadence: %.1f \n",MA_cadence(getZrot()));
+  delay(200);
+  printfLog("MA_cadence: %.1f \n",MA_cadence(getZrot()));
+  delay(200);
+  printfLog("MA_cadence: %.1f \n",MA_cadence(getZrot()));
+  delay(200);
+  printfLog("Debugging finished:\n");  
 }

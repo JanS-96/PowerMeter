@@ -154,7 +154,7 @@ int LSM6DS3Class::readGyroscope(float& x, float& y, float& z)
 
   x = data[0] * 2000.0 / 32768.0;
   y = data[1] * 2000.0 / 32768.0;
-  z = data[2] * 2000.0 / 32768.0;
+  z = data[2] * 4.375 * 16.0 / 1000.0;//2000.0 / 32768.0;
 
   return 1;
 }
@@ -176,8 +176,8 @@ int LSM6DS3Class::readTempCelsius(float& temp){
     return 0;
   }  
 
-  temp = (float)data / 16; //divide by tempSensitivity to scale
-  temp += 25; //Add 25 degrees to remove offset
+  temp = data / 16.0; //divide by tempSensitivity to scale
+  temp += 25.0; //Add 25 degrees to remove offset
     
   return 1;
 }
