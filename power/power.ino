@@ -377,7 +377,7 @@ void printHelp() {
   printfLog(" f : Fake power & cadence\n");
   printfLog(" c : Calibrate load sensor\n");
   printfLog(" s : enter Sleep mode\n");
-  printfLog(" d : debug Gyro-Data\n");
+  printfLog(" g : debug Gyro-Data\n");
   printfLog("\n");
 }
 
@@ -387,7 +387,7 @@ void printHelp() {
 void readUserInput() {
   char buf[64]={'\0'};
   GetUserInput(buf);
-  if (buf[0] == 'd') debugGyro();
+  if (buf[0] == 'g') debugGyro();
   if (buf[0] == 'c') calibrateLoadCell();
   if (buf[0] == 's') enterSleepMode();
   if (buf[0] == 'h') printHelp(); 

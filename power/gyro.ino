@@ -254,28 +254,38 @@ float getTemperature() {
 
 void debugGyro(){
   printfLog("Debugging Gyro:\n");
-  printfLog("Turn crank slowly, first Zrot-Data:\n");
+  printfLog("Turn crank slowly:\n");
   delay(500);
-  printfLog("Zrot: %.1f \n",getZrot());
+  float rot = getZrot();
+  printfLog("Zrot: %.1f, MA_cadence: %.001f \n", rot, MA_cadence(rot));
   delay(200);
-  printfLog("Zrot: %.1f \n",getZrot());
+  rot = getZrot();
+  printfLog("Zrot: %.1f, MA_cadence: %.001f \n", rot, MA_cadence(rot));
   delay(200);
-  printfLog("Zrot: %.1f \n",getZrot());
+  rot = getZrot();
+  printfLog("Zrot: %.1f, MA_cadence: %.001f \n", rot, MA_cadence(rot));
   delay(200);
-  printfLog("Zrot: %.1f \n",getZrot());
+  rot = getZrot();
+  printfLog("Zrot: %.1f, MA_cadence: %.001f \n", rot, MA_cadence(rot));
   delay(200);
-  printfLog("Zrot: %.1f \n",getZrot());
+  rot = getZrot();
+  printfLog("Zrot: %.1f, MA_cadence: %.001f \n", rot, MA_cadence(rot));
   delay(200);
-  printfLog("Turn crank slowly, next is MA_cadence:\n");
-  printfLog("MA_cadence: %.1f \n",MA_cadence(getZrot()));
+  rot = getZrot();
+  printfLog("Zrot: %.1f, MA_cadence: %.001f \n", rot, MA_cadence(rot));
   delay(200);
-  printfLog("MA_cadence: %.1f \n",MA_cadence(getZrot()));
+  rot = getZrot();
+  printfLog("Zrot: %.1f, MA_cadence: %.001f \n", rot, MA_cadence(rot));
   delay(200);
-  printfLog("MA_cadence: %.1f \n",MA_cadence(getZrot()));
+  rot = getZrot();
+  printfLog("Zrot: %.1f, MA_cadence: %.001f \n", rot, MA_cadence(rot));
   delay(200);
-  printfLog("MA_cadence: %.1f \n",MA_cadence(getZrot()));
+  rot = getZrot();
+  printfLog("Zrot: %.1f, MA_cadence: %.001f \n", rot, MA_cadence(rot));
   delay(200);
-  printfLog("MA_cadence: %.1f \n",MA_cadence(getZrot()));
+  rot = getZrot();
+  printfLog("Zrot: %.1f, MA_cadence: %.001f \n", rot, MA_cadence(rot));
   delay(200);
+ 
   printfLog("Debugging finished:\n");  
 }
