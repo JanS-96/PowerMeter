@@ -189,11 +189,11 @@ float getZrot() {
   }
 
   if (g_z != zrot_prev) {
-    zrot_prev = g_z;
+    zrot_prev = g_z;// -> in dps
     newZrotDataReady++;
   }
 
-  return abs(g_z * PI / 180.0);
+  return fabs(g_z * PI / 180.0); // -> in rad/s
   /* Get new sensor events with the readings */
   /*sensors_event_t a, g, temp;
 
