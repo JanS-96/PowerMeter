@@ -129,14 +129,14 @@ static float lastSessionTotalPower = 0;
 static long lastBluetoothUpdate = millis();
 static float avgRad;
 static float Zroll, Ztilt; 
-static bool halfWayReached = false;
+
 static bool pedaling = false;
 static uint16_t totalCrankRevs = 0; 
 static float mps = 0;
 static float avgForce = 0;
 static int16_t power = 0;
 static long bluetoothTime = 0; // the time as reported to the bluetooth host
-static float irgendwas = 0;
+static float force_avg, force_cnt;
 
 // Initialize timers
 static long lastMeasurement = millis();
@@ -180,10 +180,14 @@ void setup() {
 void loop() {
 
   // Get moving average velocity in rad per second
-  avgRad = MA_cadence(getZrot());
+  float Zrot = getZrot();
+  boolean angleEvent = calcAngle(Zrot);
+  
+  avgRad = MA_cadence(Zrot, angleEvent);
+  getCumulatedForce(&force_avg, &force_cnt);
 
   // Get the crank Z position
-  getZtilt(&Zroll, &Ztilt);
+  //getZtilt(&Zroll, &Ztilt);
 
   // Check if we stopped pedaling
   if ((avgRad <= STAND_STILL_RPS) && ((millis() - lastStopMessage) >= STOPPED_BLE_UPDATE_INTERVAL)) 
@@ -194,16 +198,10 @@ void loop() {
   }
   else 
   {
-    // Check if we reached the halfway point (crank pointing backward (Zroll>0)
-    if (Zroll>0) {
-      halfWayReached = true;
-    }
-    // Check if we reached the measuring position (crank pointing forward (Zroll<0) and as horizontal as possible (Ztilt~0))
-    else if (halfWayReached && 
-             (Zroll<0) && (Ztilt<0)) 
+    if (angleEvent == true)
     { 
       pedaling = true;
-      halfWayReached = false;
+      
       publishAndStoreCycleInfo();
     }
   }
@@ -415,13 +413,15 @@ void readUserInput() {
   }
 }
 
-float MA_cadence(float value) {
+float MA_cadence(float value, boolean event) {
   const int nvalues = 1024;            // At least the maximum number of values (#ZrotData) per crank-rotation 
-
+  static int cnt = 0;
   static int current = 0;            // Index for current value
   static int cvalues = 0;            // Count of values read (<= nvalues)
   static float sum = 0;               // Rolling sum
   static float values[nvalues];
+
+  cnt++;
 
   sum += value;
 
@@ -438,4 +438,45 @@ float MA_cadence(float value) {
     cvalues++;
 
   return sum/float(cvalues);
+}
+
+float getAvgForce(){
+  float smth = force_avg;
+  float smth2 = force_cnt;
+  force_avg = 0;
+  force_cnt = 0;
+  return smth/smth2;
+}
+
+boolean calcAngle(float gyro){
+  
+  static unsigned long prevTime = 0;
+  unsigned long thisTime = millis();
+  bool crankEvent = false; 
+  float angleChange = 0.0;
+  static float lastAngle = 0.0;
+  
+  unsigned long timediff = thisTime - prevTime;
+  gyro = gyro * 180.0 / PI;
+
+  if(timediff >= 10){
+    angleChange = gyro * timediff / 1000.0; // deg/s * s = deg    
+    if(angleChange > 0.0f){    //nur vorwärts wird gezählt
+      lastAngle = lastAngle + angleChange;     
+    }    
+    prevTime = thisTime;
+  } 
+  
+  if(lastAngle >= 360.0f){
+    lastAngle = 0;
+    crankEvent = true;    
+  }  
+  //update LCET and cumrev every 360° revolution of crank
+  if (crankEvent){    
+    crankEvent = false;
+    return true;
+  } else {
+    return false;
+  }    
+  
 }
