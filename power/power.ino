@@ -136,6 +136,7 @@ static float mps = 0;
 static float avgForce = 0;
 static int16_t power = 0;
 static long bluetoothTime = 0; // the time as reported to the bluetooth host
+static float irgendwas = 0;
 
 // Initialize timers
 static long lastMeasurement = millis();
@@ -415,7 +416,7 @@ void readUserInput() {
 }
 
 float MA_cadence(float value) {
-  const int nvalues = 256;            // At least the maximum number of values (#ZrotData) per crank-rotation 
+  const int nvalues = 1024;            // At least the maximum number of values (#ZrotData) per crank-rotation 
 
   static int current = 0;            // Index for current value
   static int cvalues = 0;            // Count of values read (<= nvalues)
@@ -436,5 +437,5 @@ float MA_cadence(float value) {
   if (cvalues < nvalues)
     cvalues++;
 
-  return sum/cvalues;
+  return sum/float(cvalues);
 }

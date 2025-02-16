@@ -259,7 +259,7 @@ void blePublishPower(int16_t instantPwr, uint16_t crankRevs, long millisLast) {
   uint16ToLso(instantPwr, pwr);
 
   // Cadence last event time is time of last event, in 1/1024 second resolution
-  uint16_t lastEventTime = uint16_t(millisLast / 1000.f * 1024.f) % 65536;
+  uint16_t lastEventTime = uint16_t(millisLast / 1000.f * 1024.f);//% 65536;
 //  Serial.printf("Timestamp: %d\n",lastEventTime);
 
   // Split the 16-bit ints into 8 bits, LSO is first in array.
