@@ -184,7 +184,7 @@ void loop() {
   boolean angleEvent = calcAngle(Zrot);
   
   avgRad = MA_cadence(Zrot, angleEvent);
-  getCumulatedForce(&force_avg, &force_cnt);
+  getCumulatedForce(&force_avg, &force_cnt);  
 
   // Get the crank Z position
   //getZtilt(&Zroll, &Ztilt);
@@ -229,6 +229,8 @@ void loop() {
 // Publish and store cycle-info to the bluetooth host
 void publishAndStoreCycleInfo() 
 {
+  printfLog("force_cnt: %0.0f",force_cnt);
+  printfLog("force_avg: %0.0f",force_avg);
   // Get the moving average force from the load cell (library)
   avgForce = getAvgForce();
 
@@ -412,32 +414,54 @@ void readUserInput() {
     }
   }
 }
-
 float MA_cadence(float value, boolean event) {
-  const int nvalues = 1024;            // At least the maximum number of values (#ZrotData) per crank-rotation 
-  static int cnt = 0;
-  static int current = 0;            // Index for current value
-  static int cvalues = 0;            // Count of values read (<= nvalues)
-  static float sum = 0;               // Rolling sum
-  static float values[nvalues];
+    static const int maxValues = 256; // Maximale Anzahl an Werten
+    static float values[maxValues]; // Array für Werte
+    static int current = 0; // Index für den aktuellen Wert
+    static int cvalues = 0; // Anzahl der gelesenen Werte (<= maxValues)
+    static float sum = 0; // Rolling Sum
+    static int cnt = 0; // Zähler für Aufrufe zwischen Events
 
-  cnt++;
+    cnt++; // Erhöhe den Zähler bei jedem Aufruf
+    if (cnt >= maxValues) cnt = maxValues;
 
-  sum += value;
+    // Füge den neuen Wert zur Summe hinzu und speichere ihn im Array
+    if (cvalues < maxValues) {
+        values[current] = value; // Speichere den neuen Wert
+        sum += value; // Neuen Wert zur Summe hinzufügen
+        current++; // Erhöhe den aktuellen Index
 
-  // If the window is full, adjust the sum by deleting the oldest value
-  if (cvalues == nvalues)
-    sum -= values[current];
+        if (current >= maxValues) current = 0; // Index zurücksetzen, wenn er das Ende erreicht hat
 
-  values[current] = value;          // Replace the oldest with the latest
+        cvalues++; // Erhöhe die Anzahl der gelesenen Werte nur bis zur maximalen Größe
+    } else {
+        sum -= values[current]; // Ältesten Wert von der Summe abziehen
+        values[current] = value; // Ersetze den ältesten Wert mit dem neuesten
+        sum += value; // Neuen Wert zur Summe hinzufügen
 
-  if (++current >= nvalues)
-    current = 0;
+        current++; // Erhöhe den aktuellen Index
 
-  if (cvalues < nvalues)
-    cvalues++;
+        if (current >= maxValues) current = 0; // Index zurücksetzen, wenn er das Ende erreicht hat
+    }
+    
+    if (event) {
+        if (cnt > 0) { 
+            sum = 0;     // Summe zurücksetzen
+            //cvalues = 0; // Anzahl der gültigen Werte zurücksetzen
 
-  return sum/float(cvalues);
+            for (int i = 0; i < cnt && i < maxValues; i++) {
+                sum += values[(current - cnt + i + maxValues) % maxValues]; 
+                //cvalues++;
+            }
+        }
+
+        return sum/float(cnt);
+        cnt = 0; // Zähler zurücksetzen bei einem Event
+        //current = 0; // Aktuellen Index zurücksetzen
+    }else{
+      return sum/cvalues;
+    }
+
 }
 
 float getAvgForce(){

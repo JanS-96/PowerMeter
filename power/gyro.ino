@@ -193,7 +193,7 @@ float getZrot() {
     newZrotDataReady++;
   }
 
-  return fabs(g_z * PI / 180.0); // -> in rad/s
+  return g_z * PI / 180.0; // -> in rad/s
   /* Get new sensor events with the readings */
   /*sensors_event_t a, g, temp;
 
@@ -257,34 +257,34 @@ void debugGyro(){
   printfLog("Turn crank slowly:\n");
   delay(500);
   float rot = getZrot();
-  printfLog("Zrot: %.1f, MA_cadence: %.001f \n", rot, MA_cadence(rot));
+  printfLog("Zrot: %.1f, MA_cadence: %.001f \n", rot, MA_cadence(rot,false));
   delay(200);
   rot = getZrot();
-  printfLog("Zrot: %.1f, MA_cadence: %.001f \n", rot, MA_cadence(rot));
+  printfLog("Zrot: %.1f, MA_cadence: %.001f \n", rot, MA_cadence(rot,false));
   delay(200);
   rot = getZrot();
-  printfLog("Zrot: %.1f, MA_cadence: %.001f \n", rot, MA_cadence(rot));
+  printfLog("Zrot: %.1f, MA_cadence: %.001f \n", rot, MA_cadence(rot,false));
   delay(200);
   rot = getZrot();
-  printfLog("Zrot: %.1f, MA_cadence: %.001f \n", rot, MA_cadence(rot));
+  printfLog("Zrot: %.1f, MA_cadence: %.001f \n", rot, MA_cadence(rot,false));
   delay(200);
   rot = getZrot();
-  printfLog("Zrot: %.1f, MA_cadence: %.001f \n", rot, MA_cadence(rot));
+  printfLog("Zrot: %.1f, MA_cadence: %.001f \n", rot, MA_cadence(rot,false));
   delay(200);
   rot = getZrot();
-  printfLog("Zrot: %.1f, MA_cadence: %.001f \n", rot, MA_cadence(rot));
+  printfLog("Zrot: %.1f, MA_cadence: %.001f \n", rot, MA_cadence(rot,false));
   delay(200);
   rot = getZrot();
-  printfLog("Zrot: %.1f, MA_cadence: %.001f \n", rot, MA_cadence(rot));
+  printfLog("Zrot: %.1f, MA_cadence: %.001f \n", rot, MA_cadence(rot,false));
   delay(200);
   rot = getZrot();
-  printfLog("Zrot: %.1f, MA_cadence: %.001f \n", rot, MA_cadence(rot));
+  printfLog("Zrot: %.1f, MA_cadence: %.001f \n", rot, MA_cadence(rot,false));
   delay(200);
   rot = getZrot();
-  printfLog("Zrot: %.1f, MA_cadence: %.001f \n", rot, MA_cadence(rot));
+  printfLog("Zrot: %.1f, MA_cadence: %.001f \n", rot, MA_cadence(rot,false));
   delay(200);
   rot = getZrot();
-  printfLog("Zrot: %.1f, MA_cadence: %.001f \n", rot, MA_cadence(rot));
+  printfLog("Zrot: %.1f, MA_cadence: %.001f \n", rot, MA_cadence(rot,false));
   delay(200);
  
   printfLog("Debugging finished:\n");  

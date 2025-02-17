@@ -63,8 +63,8 @@ void getCumulatedForce(float *f_avg, float *f_cnt) {
       noInterrupts(); // disable interrupts
       *f_avg += abs(LoadCell.getData());
       newLoadDataReady_prev = newLoadDataReady;
-      newLoadDataReady = 0;
-      *f_cnt++;
+      newLoadDataReady = 0;   
+      *f_cnt += 1.0;  
       interrupts(); // enable interrupts
   }
     

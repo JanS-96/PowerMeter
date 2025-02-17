@@ -24,7 +24,7 @@ Note that you can also overide (reducing) the number of samples in use at any ti
 */
 
 //number of samples in moving average dataset, value must be 1, 2, 4, 8, 16, 32, 64 or 128.
-#define SAMPLES 					32		//default value: 16, we use 32 samples to have at least 1 crank-rotation of measurements
+#define SAMPLES 					8		//default value: 16, we use 32 samples to have at least 1 crank-rotation of measurements
 
 //adds extra sample(s) to the dataset and ignore peak high/low sample, value must be 0 or 1.
 #define IGN_HIGH_SAMPLE 			1		//default value: 1
@@ -38,4 +38,3 @@ Note that you can also overide (reducing) the number of samples in use at any ti
 //if you have some other time consuming (>60μs) interrupt routines that trigger while the sck pin is high, this could unintentionally set the HX711 into "power down" mode
 //if required you can change the value to '1' to disable interrupts when writing to the sck pin.
 #define SCK_DISABLE_INTERRUPTS		0		//default value: 0
-
