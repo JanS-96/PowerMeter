@@ -57,15 +57,8 @@ void dataReadyISR() {
  * Get the current force from the load cell. Returns an exponentially
  * rolling average, in Newtons.
  */
-void getCumulatedForce(float *f_avg, float *f_cnt) {
-  
-  if (newLoadDataReady) {
-      noInterrupts(); // disable interrupts
-      *f_avg += abs(LoadCell.getData());
-      newLoadDataReady_prev = newLoadDataReady;
-      newLoadDataReady = 0;   
-      *f_cnt += 1.0;  
-      interrupts(); // enable interrupts
-  }
-    
+void getCumulatedForce(float *f_avg) {  
+  noInterrupts(); // disable interrupts
+  *f_avg += abs(LoadCell.getData());              
+  interrupts(); // enable interrupts   
 }

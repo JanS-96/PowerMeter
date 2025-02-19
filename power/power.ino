@@ -184,8 +184,12 @@ void loop() {
   boolean angleEvent = calcAngle(Zrot);
   
   avgRad = MA_cadence(Zrot, angleEvent);
-  getCumulatedForce(&force_avg, &force_cnt);  
-
+  if (newLoadDataReady) {
+    getCumulatedForce(&force_avg);
+    force_cnt += 1.0;
+    newLoadDataReady_prev = newLoadDataReady;
+    newLoadDataReady = 0;   
+  }
   // Get the crank Z position
   //getZtilt(&Zroll, &Ztilt);
 
@@ -229,8 +233,8 @@ void loop() {
 // Publish and store cycle-info to the bluetooth host
 void publishAndStoreCycleInfo() 
 {
-  printfLog("force_cnt: %0.0f",force_cnt);
-  printfLog("force_avg: %0.0f",force_avg);
+  //printfLog("force_cnt: %0.0f",force_cnt);
+  //printfLog("force_avg: %0.0f",force_avg);
   // Get the moving average force from the load cell (library)
   avgForce = getAvgForce();
 
