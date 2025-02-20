@@ -59,6 +59,6 @@ void dataReadyISR() {
  */
 void getCumulatedForce(float *f_avg) {  
   noInterrupts(); // disable interrupts
-  *f_avg += abs(LoadCell.getData());              
+  *f_avg += LoadCell.getData();              
   interrupts(); // enable interrupts   
 }

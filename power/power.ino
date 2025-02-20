@@ -32,7 +32,7 @@ ToDo:
 
 #define DEV_NAME "Cycle Power Meter"
 //#define NRF52840_XXAA
-#define gn 9.80665 // gravity constant
+#define gn 9.81 // gravity constant
 
 // Virtufit Etappe I: crank length, in meters
 // (to be added to the calibration procedure!)
@@ -251,7 +251,7 @@ void publishAndStoreCycleInfo()
   // we estimate the delta-time from the last gyroscope crank-speed measurements (avgRad)
   // assuming exactly 1 crank-rotation has passed.
   // This provides a smoother cadence profile than using millis() to calculate the passed time.
-  float deltaTime = 2000.f * PI / avgRad; // 1000 [ms] * (2*PI) / avgRad 
+  float deltaTime = float(millis() - lastMeasurement); //2000.f * PI / avgRad; // 1000 [ms] * (2*PI) / avgRad 
   bluetoothTime += deltaTime;
 
   // Show the values (to check if the Ztilt is close to 0 when measuring)
@@ -471,9 +471,9 @@ float MA_cadence(float value, boolean event) {
 float getAvgForce(){
   float smth = force_avg;
   float smth2 = force_cnt;
-  force_avg = 0;
-  force_cnt = 0;
-  return smth/smth2;
+  force_avg = 0.0;
+  force_cnt = 0.0;
+  return (smth/smth2);
 }
 
 boolean calcAngle(float gyro){
