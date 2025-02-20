@@ -449,6 +449,7 @@ float MA_cadence(float value, boolean event) {
     }
     
     if (event) {
+        printfLog("cnt: %d\n", cnt);
         if (cnt > 0) { 
             sum = 0;     // Summe zurücksetzen
             //cvalues = 0; // Anzahl der gültigen Werte zurücksetzen
@@ -458,9 +459,9 @@ float MA_cadence(float value, boolean event) {
                 //cvalues++;
             }
         }
-
-        return sum/float(cnt);
-        cnt = 0; // Zähler zurücksetzen bei einem Event
+        int cnt_help = cnt;
+        cnt = 0;
+        return sum/float(cnt_help);
         //current = 0; // Aktuellen Index zurücksetzen
     }else{
       return sum/cvalues;

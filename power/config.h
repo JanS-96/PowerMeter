@@ -24,11 +24,11 @@ Note that you can also overide (reducing) the number of samples in use at any ti
 */
 
 //number of samples in moving average dataset, value must be 1, 2, 4, 8, 16, 32, 64 or 128.
-#define SAMPLES 					1		//default value: 16, we use 32 samples to have at least 1 crank-rotation of measurements
+#define SAMPLES 					8		//default value: 16, we use 32 samples to have at least 1 crank-rotation of measurements
 
 //adds extra sample(s) to the dataset and ignore peak high/low sample, value must be 0 or 1.
-#define IGN_HIGH_SAMPLE 			0		//default value: 1
-#define IGN_LOW_SAMPLE 				0	//default value: 1
+#define IGN_HIGH_SAMPLE 			1		//default value: 1
+#define IGN_LOW_SAMPLE 				1		//default value: 1
 
 //microsecond delay after writing sck pin high or low. This delay could be required for faster mcu's.
 //So far the only mcu reported to need this delay is the ESP32 (issue #35), both the Arduino Due and ESP8266 seems to run fine without it.
