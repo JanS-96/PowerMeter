@@ -86,7 +86,7 @@ typedef struct settings_struct {
 
   int gyro_offset = 0;
   long load_offset = 0;
-  float load_multiplier = 0;
+  float load_multiplier = 0.0;
 } nvram_settings_struct;
 nvram_settings_struct nvram_settings;
 
@@ -122,7 +122,7 @@ File file(InternalFS);
 static long lastSessionStart;
 static long lastSessionEnd = 0;
 static long lastSessionTotalCount = 0;
-static float lastSessionTotalPower = 0;
+static float lastSessionTotalPower = 0.0;
 
 // Last measured/calculated values 
 // TODO: Localize these variables (to the main loop)
@@ -132,8 +132,8 @@ static float Zroll, Ztilt;
 
 static bool pedaling = false;
 static uint16_t totalCrankRevs = 0; 
-static float mps = 0;
-static float avgForce = 0;
+static float mps = 0.0;
+static float avgForce = 0.0;
 static int16_t power = 0;
 static long bluetoothTime = 0; // the time as reported to the bluetooth host
 static float force_avg, force_cnt;
@@ -178,17 +178,16 @@ void setup() {
 // Main loop
 //
 void loop() {
-
   // Get moving average velocity in rad per second
   float Zrot = getZrot();
-  boolean angleEvent = calcAngle(Zrot);
-  
+  boolean angleEvent = calcAngle(Zrot); 
   avgRad = MA_cadence(Zrot, angleEvent);
+   
   if (newLoadDataReady) {
     getCumulatedForce(&force_avg);
     force_cnt += 1.0;
     newLoadDataReady_prev = newLoadDataReady;
-    newLoadDataReady = 0;   
+    newLoadDataReady = 0;     
   }
   // Get the crank Z position
   //getZtilt(&Zroll, &Ztilt);
@@ -242,7 +241,7 @@ void publishAndStoreCycleInfo()
   mps = CRANK_RADIUS * avgRad; // (2*PI*r) * avgRad/(2*PI) = r * avgRad
 
   // Multiply it all by 2, because we only have the sensor on 1/2 the cranks
-  power = 2 * mps * avgForce;
+  power = 2.0 * mps * avgForce;
 
   // As per Zrot/Ztilt measurement, 1 full crank-rotatation has been performed
   totalCrankRevs++;
@@ -251,7 +250,7 @@ void publishAndStoreCycleInfo()
   // we estimate the delta-time from the last gyroscope crank-speed measurements (avgRad)
   // assuming exactly 1 crank-rotation has passed.
   // This provides a smoother cadence profile than using millis() to calculate the passed time.
-  float deltaTime = float(millis() - lastMeasurement); //2000.f * PI / avgRad; // 1000 [ms] * (2*PI) / avgRad 
+  float deltaTime = 2000.f * PI / avgRad; //float(millis() - lastMeasurement); // 1000 [ms] * (2*PI) / avgRad 
   bluetoothTime += deltaTime;
 
   // Show the values (to check if the Ztilt is close to 0 when measuring)
@@ -423,48 +422,57 @@ float MA_cadence(float value, boolean event) {
     static float values[maxValues]; // Array für Werte
     static int current = 0; // Index für den aktuellen Wert
     static int cvalues = 0; // Anzahl der gelesenen Werte (<= maxValues)
-    static float sum = 0; // Rolling Sum
+    static float sum = 0.0; // Rolling Sum
     static int cnt = 0; // Zähler für Aufrufe zwischen Events
 
-    cnt++; // Erhöhe den Zähler bei jedem Aufruf
-    if (cnt >= maxValues) cnt = maxValues;
+    static unsigned long prevTime1 = 0;
+    unsigned long thisTime1 = millis();
 
-    // Füge den neuen Wert zur Summe hinzu und speichere ihn im Array
-    if (cvalues < maxValues) {
-        values[current] = value; // Speichere den neuen Wert
-        sum += value; // Neuen Wert zur Summe hinzufügen
-        current++; // Erhöhe den aktuellen Index
-
-        if (current >= maxValues) current = 0; // Index zurücksetzen, wenn er das Ende erreicht hat
-
-        cvalues++; // Erhöhe die Anzahl der gelesenen Werte nur bis zur maximalen Größe
-    } else {
-        sum -= values[current]; // Ältesten Wert von der Summe abziehen
-        values[current] = value; // Ersetze den ältesten Wert mit dem neuesten
-        sum += value; // Neuen Wert zur Summe hinzufügen
-
-        current++; // Erhöhe den aktuellen Index
-
-        if (current >= maxValues) current = 0; // Index zurücksetzen, wenn er das Ende erreicht hat
+    if((thisTime1 - prevTime1) >= 10){
+      
+      cnt++; // Erhöhe den Zähler bei jedem Aufruf
+      //if (cnt >= maxValues) cnt = maxValues;
+  
+      // Füge den neuen Wert zur Summe hinzu und speichere ihn im Array
+      if (cvalues < maxValues) {
+          values[current] = value; // Speichere den neuen Wert
+          sum += value; // Neuen Wert zur Summe hinzufügen
+          current++; // Erhöhe den aktuellen Index
+  
+          if (current >= maxValues) current = 0; // Index zurücksetzen, wenn er das Ende erreicht hat
+  
+          cvalues++; // Erhöhe die Anzahl der gelesenen Werte nur bis zur maximalen Größe
+      } else {
+          sum -= values[current]; // Ältesten Wert von der Summe abziehen
+          values[current] = value; // Ersetze den ältesten Wert mit dem neuesten
+          sum += value; // Neuen Wert zur Summe hinzufügen
+  
+          current++; // Erhöhe den aktuellen Index
+  
+          if (current >= maxValues) current = 0; // Index zurücksetzen, wenn er das Ende erreicht hat
+      }
+      prevTime1 = thisTime1;
     }
-    
     if (event) {
-        printfLog("cnt: %d\n", cnt);
+        //printfLog("cnt: %d\n", cnt);
         if (cnt > 0) { 
-            sum = 0;     // Summe zurücksetzen
+            sum = 0.0;     // Summe zurücksetzen
             //cvalues = 0; // Anzahl der gültigen Werte zurücksetzen
 
             for (int i = 0; i < cnt && i < maxValues; i++) {
-                sum += values[(current - cnt + i + maxValues) % maxValues]; 
+                sum += values[(current - (cnt%maxValues) + i + maxValues) % maxValues]; 
                 //cvalues++;
             }
+        }else{
+          return 0.0;
         }
         int cnt_help = cnt;
         cnt = 0;
+        //printfLog("sum: %f.0\n", sum);
         return sum/float(cnt_help);
         //current = 0; // Aktuellen Index zurücksetzen
     }else{
-      return sum/cvalues;
+      return sum/float(cvalues);
     }
 
 }
@@ -497,7 +505,7 @@ boolean calcAngle(float gyro){
   } 
   
   if(lastAngle >= 360.0f){
-    lastAngle = 0;
+    lastAngle = 0.0;
     crankEvent = true;    
   }  
   //update LCET and cumrev every 360° revolution of crank
