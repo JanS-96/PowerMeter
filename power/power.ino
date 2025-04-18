@@ -250,7 +250,7 @@ void publishAndStoreCycleInfo()
   // we estimate the delta-time from the last gyroscope crank-speed measurements (avgRad)
   // assuming exactly 1 crank-rotation has passed.
   // This provides a smoother cadence profile than using millis() to calculate the passed time.
-  float deltaTime = 2000.f * PI / avgRad; //float(millis() - lastMeasurement); // 1000 [ms] * (2*PI) / avgRad 
+  float deltaTime = (millis() - lastMeasurement);//float deltaTime = 2000.f * PI / avgRad;  // 1000 [ms] * (2*PI) / avgRad 
   bluetoothTime += deltaTime;
 
   // Show the values (to check if the Ztilt is close to 0 when measuring)
